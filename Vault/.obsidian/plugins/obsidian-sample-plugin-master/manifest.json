@@ -1,0 +1,11 @@
+{
+	"id": "work-report",
+	"name": "Work Report",
+	"version": "0.0.1",
+	"minAppVersion": "1.7.6",
+	"description": "Demonstrates some of the capabilities of the Obsidian API.",
+	"author": "Mark",
+	"authorUrl": "https://obsidian.md",
+	"fundingUrl": "https://obsidian.md/pricing",
+	"isDesktopOnly": false
+}
