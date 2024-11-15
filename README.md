@@ -1,0 +1,1 @@
+# obsidian-work-report-plugin
