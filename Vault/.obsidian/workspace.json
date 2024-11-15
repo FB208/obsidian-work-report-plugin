@@ -22,22 +22,6 @@
             }
           }
         ]
-      },
-      {
-        "id": "2dada75a0acb0899",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "87fe3c8d3076ed9e",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
-            }
-          }
-        ]
       }
     ],
     "direction": "vertical"
@@ -104,6 +88,16 @@
         "type": "tabs",
         "children": [
           {
+            "id": "87fe3c8d3076ed9e",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "关系图谱"
+            }
+          },
+          {
             "id": "08216313b4491871",
             "type": "leaf",
             "state": {
@@ -160,13 +154,23 @@
               "icon": "lucide-list",
               "title": "欢迎 的大纲"
             }
+          },
+          {
+            "id": "3221f9f2de7c1941",
+            "type": "leaf",
+            "state": {
+              "type": "example-view",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "Example View"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -175,10 +179,11 @@
       "canvas:新建白板": false,
       "daily-notes:打开/创建今天的日记": false,
       "templates:插入模板": false,
-      "command-palette:打开命令面板": false
+      "command-palette:打开命令面板": false,
+      "work-report:Sample Plugin": false
     }
   },
-  "active": "c815a0015561d542",
+  "active": "3221f9f2de7c1941",
   "lastOpenFiles": [
     "欢迎.md"
   ]

@@ -1,4 +1,12 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, ItemView, WorkspaceLeaf } from 'obsidian';
+import type { MarkdownFileInfo } from 'obsidian';
+import ExampleView from "./src/ExampleView.svelte";
+import { count } from './src/store';
+import { get } from 'svelte/store';
+
+
+// 在 HelloWorldPlugin 类中添加这个常量
+export const VIEW_TYPE_EXAMPLE = "example-view";
 
 // Remember to rename these classes and interfaces!
 
@@ -11,7 +19,7 @@ const DEFAULT_SETTINGS: HelloWorldPluginSettings = {
 }
 
 export default class HelloWorldPlugin extends Plugin {
-	settings: HelloWorldPluginSettings;
+	settings: HelloWorldPluginSettings = DEFAULT_SETTINGS;
 
 	async onload() {
 		await this.loadSettings();
@@ -40,7 +48,7 @@ export default class HelloWorldPlugin extends Plugin {
 		this.addCommand({
 			id: 'sample-editor-command',
 			name: 'Sample editor command',
-			editorCallback: (editor: Editor, view: MarkdownView) => {
+			editorCallback: (editor: Editor, ctx: MarkdownView | MarkdownFileInfo) => {
 				console.log(editor.getSelection());
 				editor.replaceSelection('Sample Editor Command');
 			}
@@ -76,6 +84,31 @@ export default class HelloWorldPlugin extends Plugin {
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+
+		// 注册视图
+		this.registerView(
+			VIEW_TYPE_EXAMPLE,
+			(leaf) => new ExampleItemView(leaf)
+		);
+
+		// 添加打开视图的命令
+		this.addCommand({
+			id: 'open-example-view',
+			name: '打开示例视图',
+			callback: () => {
+				this.activateView();
+			}
+		});
+
+		// 添加增加计数的命令
+		this.addCommand({
+			id: 'increment-count',
+			name: '增加计数',
+			callback: () => {
+				count.update(n => n + 1);
+				new Notice(`当前计数：${get(count)}`);
+			}
+		});
 	}
 
 	onunload() {
@@ -88,6 +121,24 @@ export default class HelloWorldPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
+	}
+
+	// 在 HelloWorldPlugin 类中添加这个方法
+	async activateView() {
+		const { workspace } = this.app;
+		
+		let leaf = workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE)[0];
+		if (!leaf) {
+			const rightLeaf = workspace.getRightLeaf(false);
+			if (!rightLeaf) return;
+			leaf = rightLeaf;
+			await leaf.setViewState({
+				type: VIEW_TYPE_EXAMPLE,
+				active: true,
+			});
+		}
+		
+		workspace.revealLeaf(leaf);
 	}
 }
 
@@ -130,5 +181,49 @@ class SampleSettingTab extends PluginSettingTab {
 					this.plugin.settings.mySetting = value;
 					await this.plugin.saveSettings();
 				}));
+	}
+}
+
+// 创建一个新的视图类
+class ExampleItemView extends ItemView {
+	component: ExampleView;
+
+	constructor(leaf: WorkspaceLeaf) {
+		super(leaf);
+	}
+
+	getViewType() {
+		return VIEW_TYPE_EXAMPLE;
+	}
+
+	getDisplayText() {
+		return "Example View";
+	}
+
+	async onOpen() {
+		// 添加一些调试信息
+		console.log("Opening view...");
+		this.contentEl.empty();  // 清空容器
+		this.contentEl.createEl("p", { text: "Loading..." });  // 添加加载提示
+
+		try {
+			this.component = new ExampleView({
+				target: this.contentEl,
+				props: {
+					name: "Obsidian"
+				}
+			});
+			console.log("Component mounted successfully");
+		} catch (error) {
+			console.error("Error mounting component:", error);
+			this.contentEl.empty();
+			this.contentEl.createEl("p", { text: "Error loading component" });
+		}
+	}
+
+	async onClose() {
+		if (this.component) {
+			this.component.$destroy();
+		}
 	}
 }
