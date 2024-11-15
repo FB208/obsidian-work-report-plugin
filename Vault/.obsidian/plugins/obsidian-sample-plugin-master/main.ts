@@ -4,6 +4,12 @@ import ExampleView from "./src/ExampleView.svelte";
 import { count } from './src/store';
 import { get } from 'svelte/store';
 
+// 添加类型声明
+declare module 'obsidian' {
+    interface MenuItem {
+        setSubmenu: () => Menu;
+    }
+}
 
 // 在 HelloWorldPlugin 类中添加这个常量
 export const VIEW_TYPE_EXAMPLE = "example-view";
@@ -109,6 +115,30 @@ export default class HelloWorldPlugin extends Plugin {
 				new Notice(`当前计数：${get(count)}`);
 			}
 		});
+
+		// 添加编辑器右键菜单
+		this.registerEvent(
+			this.app.workspace.on('editor-menu', (menu, editor, view) => {
+				menu.addItem((item) => {
+					const submenu = item.setTitle('工作报告')
+						.setSection('action')
+						.setSubmenu();
+
+					submenu.addItem((item) => {
+						item.setTitle('显示')
+							.setIcon('eye')
+							.onClick(async () => {
+								const selection = editor.getSelection();
+								if (selection) {
+									new Notice(`选中的文本：${selection}`);
+								} else {
+									new Notice('没有选中任何文本');
+								}
+							});
+					});
+				});
+			})
+		);
 	}
 
 	onunload() {
@@ -186,7 +216,7 @@ class SampleSettingTab extends PluginSettingTab {
 
 // 创建一个新的视图类
 class ExampleItemView extends ItemView {
-	component: ExampleView;
+	component!: ExampleView;
 
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);

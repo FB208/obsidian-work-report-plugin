@@ -154,19 +154,9 @@
               "icon": "lucide-list",
               "title": "欢迎 的大纲"
             }
-          },
-          {
-            "id": "3221f9f2de7c1941",
-            "type": "leaf",
-            "state": {
-              "type": "example-view",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "Example View"
-            }
           }
         ],
-        "currentTab": 5
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
@@ -183,7 +173,7 @@
       "work-report:Sample Plugin": false
     }
   },
-  "active": "3221f9f2de7c1941",
+  "active": "99d1b841b50e06d7",
   "lastOpenFiles": [
     "欢迎.md"
   ]
